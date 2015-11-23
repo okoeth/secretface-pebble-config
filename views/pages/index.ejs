@@ -19,23 +19,41 @@
     <div class='item-container-header'>Text Pages</div>
     <div class='item-container-content'>
       <label class='item'>
-      <div class="item-input-wrapper">
-        <input id='page_1' type='text' class='item-input' placeholder='Your text here...'>
-      </div>
+        <div class="item-input-wrapper">
+          <input id='page_1' type='text' class='item-input' placeholder='Your text here...'>
+        </div>
       </label>
       <label class='item'>
-      <div class="item-input-wrapper">
-        <input id='page_2' type='text' class='item-input' placeholder='Your text here...'>
-      </div>
+        <div class="item-input-wrapper">
+          <input id='page_2' type='text' class='item-input' placeholder='Your text here...'>
+        </div>
       </label>
       <label class='item'>
-      <div class="item-input-wrapper">
-        <input id='page_3' type='text' class='item-input' placeholder='Your text here...'>
-      </div>
+        <div class="item-input-wrapper">
+          <input id='page_3' type='text' class='item-input' placeholder='Your text here...'>
+        </div>
       </label>
     </div>
     <div class='item-container-footer'>
       Provide the three pages of text secret face will shown when the secret view is activated.
+    </div>
+  </div>
+
+  <div class="item-container">
+    <div class="item-container-header">Font Size</div>
+    <div class="item-container-content">
+      <label class="item">
+        Large
+        <input type="radio" class="item-radio" name="font_size" id="font_size_l" value="L">
+      </label>
+      <label class="item">
+        Medium
+        <input type="radio" class="item-radio" name="font_size" id="font_size_m" value="M">
+      </label>
+      <label class="item">
+        Small
+        <input type="radio" class="item-radio" name="font_size" id="font_size_s" value="S" checked>
+      </label>
     </div>
   </div>
 
@@ -79,13 +97,28 @@
     var page_3 = document.getElementById('page_3');
     var emergency_mode = document.getElementById('emergency_mode');
     var emergency_lock = document.getElementById('emergency_lock');
+    var font_size_l = document.getElementById('font_size_l');
+    var font_size_m = document.getElementById('font_size_m');
+    var font_size_s = document.getElementById('font_size_s');
+    var font_size = 'X';
+    if (font_size_l.checked) {
+      font_size='L';
+    }
+    else if (font_size_m.checked) {
+      font_size='M';
+    }
+    else if (font_size_s.checked) {
+      font_size='S';
+    }
+
  
     var options = {
       'page_1': page_1.value,
       'page_2': page_2.value,
       'page_3': page_3.value,
       'emergency_mode': emergency_mode.checked,
-      'emergency_lock': emergency_lock.checked
+      'emergency_lock': emergency_lock.checked,
+      'font_size': font_size
     };
 
     // Save for next launch
@@ -94,6 +127,7 @@
     localStorage['page_3'] = options['page_3'];
     localStorage['emergency_mode'] = options['emergency_mode'];
     localStorage['emergency_lock'] = options['emergency_lock'];
+    localStorage['font_size'] = options['font_size'];
     console.log('Got options: ' + JSON.stringify(options));
     return options;
   }
@@ -124,6 +158,9 @@
     var page_3 = document.getElementById('page_3');
     var emergency_mode = document.getElementById('emergency_mode');
     var emergency_lock = document.getElementById('emergency_lock');
+    var font_size_l = document.getElementById('font_size_l');
+    var font_size_m = document.getElementById('font_size_m');
+    var font_size_s = document.getElementById('font_size_s');
     // Load any previously saved configuration, if available
     if(localStorage['page_1']) {
       page_1.value = localStorage['page_1'];
@@ -139,6 +176,20 @@
     }
     if(localStorage['emergency_lock']) {
       emergency_lock.checked = JSON.parse(localStorage['emergency_lock']);
+    }
+    if(localStorage['font_size']) {
+      font_size_l.checked=false;
+      font_size_m.checked=false;
+      font_size_s.checked=false;
+      if (localStorage['font_size']=='L') {
+        font_size_l.checked=true;
+      } 
+      else if (localStorage['font_size']=='M') {
+        font_size_m.checked=true;
+      } 
+      else if (localStorage['font_size']=='S') {
+        font_size_s.checked=true;
+      }
     }
   })();
 </script>
