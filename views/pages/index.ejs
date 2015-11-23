@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+</head>
+
+<body>
+  <h1 class='title'>SecretFace Configuration</h1>
+
+  <div class='item-container'>
+    <div class='item-container-content'>
+      <div class='item'>
+        Use this configuration page to choose the settings for your SecretFace app.
+      </div>
+    </div>
+  </div>
+
+  <div class='item-container'>
+    <div class='item-container-header'>Text Pages</div>
+    <div class='item-container-content'>
+      <label class='item'>
+      <div class="item-input-wrapper">
+        <input id='page_1' type='text' class='item-input' placeholder='Your text here...'>
+      </div>
+      </label>
+      <label class='item'>
+      <div class="item-input-wrapper">
+        <input id='page_2' type='text' class='item-input' placeholder='Your text here...'>
+      </div>
+      </label>
+      <label class='item'>
+      <div class="item-input-wrapper">
+        <input id='page_3' type='text' class='item-input' placeholder='Your text here...'>
+      </div>
+      </label>
+    </div>
+    <div class='item-container-footer'>
+      Provide the three pages of text secret face will shown when the secret view is activated.
+    </div>
+  </div>
+
+  <div class='item-container'>
+    <div class='item-container-header'>Emergency Mode</div>
+    <div class='item-container-content'>
+      <label class='item'>
+        Emergency Mode
+        <input id='emergency_mode' type='checkbox' class='item-toggle'>
+      </label>
+    </div>
+    <div class='item-container-footer'>
+      Uses the accelerometer to detect an emergency and in case of an emergency hides the secret text.
+    </div>
+  </div>
+
+  <div class='item-container'>
+    <div class='item-container-header'>Emergency Lock</div>
+    <div class='item-container-content'>
+      <label class='item'>
+        Emergency Lock
+        <input id='emergency_lock' type='checkbox' class='item-toggle'>
+      </label>
+    </div>
+    <div class='item-container-footer'>
+      Locks the secret face after an emergency so that it can only be reactivated with a unique sequence of button clicks.
+    </div>
+  </div>
+
+  <div class='item-container'>
+    <div class='button-container'>
+      <input id='submit_button' type='button' class='item-button' value='SUBMIT'>
+    </div>
+  </div>
+</body>
+
+<script>
+  function getConfigData() {
+    var page_1 = document.getElementById('page_1');
+    var page_2 = document.getElementById('page_2');
+    var page_3 = document.getElementById('page_3');
+    var emergency_mode = document.getElementById('emergency_mode');
+    var emergency_lock = document.getElementById('emergency_lock');
+ 
+    var options = {
+      'page_1': page_1.value,
+      'page_2': page_2.value,
+      'page_3': page_3.value,
+      'emergency_mode': emergency_mode.checked,
+      'emergency_lock': emergency_lock.checked
+    };
+
+    // Save for next launch
+    localStorage['page_1'] = options['page_1'];
+    localStorage['page_2'] = options['page_2'];
+    localStorage['page_3'] = options['page_3'];
+    localStorage['emergency_mode'] = options['emergency_mode'];
+    localStorage['emergency_lock'] = options['emergency_lock'];
+    console.log('Got options: ' + JSON.stringify(options));
+    return options;
+  }
+
+  function getQueryParam(variable, defaultValue) {
+    var query = location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+      var pair = vars[i].split('=');
+      if (pair[0] === variable) {
+        return decodeURIComponent(pair[1]);
+      }
+    }
+    return defaultValue || false;
+  }
+ 
+  var submitButton = document.getElementById('submit_button');
+  submitButton.addEventListener('click', function() {
+    console.log('Submit');
+    // Set the return URL depending on the runtime environment
+    var return_to = getQueryParam('return_to', 'pebblejs://close#');
+    document.location = return_to + encodeURIComponent(JSON.stringify(getConfigData()));
+  });
+
+  (function() {
+    var page_1 = document.getElementById('page_1');
+    var page_2 = document.getElementById('page_2');
+    var page_3 = document.getElementById('page_3');
+    var emergency_mode = document.getElementById('emergency_mode');
+    var emergency_lock = document.getElementById('emergency_lock');
+    // Load any previously saved configuration, if available
+    if(localStorage['page_1']) {
+      page_1.value = localStorage['page_1'];
+    }
+    if(localStorage['page_2']) {
+      page_2.value = localStorage['page_2'];
+    }
+    if(localStorage['page_3']) {
+      page_3.value = localStorage['page_3'];
+    }
+    if(localStorage['emergency_mode']) {
+      emergency_mode.checked = JSON.parse(localStorage['emergency_mode']);
+    }
+    if(localStorage['emergency_lock']) {
+      emergency_lock.checked = JSON.parse(localStorage['emergency_lock']);
+    }
+  })();
+</script>
+
+</html>
